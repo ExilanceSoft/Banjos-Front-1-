@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { FiSearch, FiX, FiExternalLink, FiCheckCircle, FiUpload, FiClock } from 'react-icons/fi';
-
+import careers from '../../assets/img/career.jpg';
 // Make sure to set the app element for accessibility
 Modal.setAppElement('#root');
 
@@ -87,9 +87,7 @@ const Jobs = () => {
     }
 
     try {
-
       const response = await fetch('http://64.227.163.17:8000/job-applications/', {
-
         method: 'POST',
         headers: {
           'accept': 'application/json',
@@ -117,15 +115,15 @@ const Jobs = () => {
 
   if (loading) {
     return (
-      <section id="menu" className="menu section abc">
+      <section id="menu" className="menu section">
         <div className="container text-center py-5">
-          <div className="loading-overlay">
+          <div style={styles.loadingOverlay}>
             <img 
-              src="/pizza.gif"  // Make sure pizza.gif is in public folder
-              alt="Loading menu..." 
-              className="loading-gif"
+               src="/pizza.gif"
+              alt="Loading..." 
+              style={styles.loadingGif}
             />
-            <div className="loading-text">Preparing Your Menu...</div>
+            <div style={styles.loadingText}>Loading Job Opportunities...</div>
           </div>
         </div>
       </section>
@@ -141,19 +139,30 @@ const Jobs = () => {
   }
 
   return (
-    <section id="jobs" className="jobs abc" style={styles.portfolio}>
-      {/* Section Title */}
-      <div className="section-title" style={styles.sectionTitle}>
-        <h2 style={styles.sectionTitleH2}>Career Opportunities</h2>
-        <div className="title-shape" style={styles.titleShape}>
-          <svg viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0,10 C 40,0 60,20 100,10 C 140,0 160,20 200,10" fill="none" stroke="#e4141c" strokeWidth="2"></path>
-          </svg>
+    <section id="jobs" className="jobs" style={styles.portfolio}>
+      {/* Hero Section with Background Image */}
+      <div style={styles.heroContainer}>
+        <div style={styles.heroBackground}></div>
+        <div style={styles.heroOverlay}></div>
+        <div style={styles.heroContent}>
+          <h1 style={styles.heroTitle}>Join Our Team</h1>
+          <p style={styles.heroSubtitle}>Build your career with us</p>
         </div>
-        <p style={styles.sectionTitleP}>Join our team and grow your career with exciting opportunities</p>
       </div>
 
+      {/* Main Content */}
       <div className="container" style={styles.container}>
+        {/* Section Title */}
+        <div className="section-title" style={styles.sectionTitle}>
+          <h2 style={styles.sectionTitleH2}>Career Opportunities</h2>
+          <div className="title-shape" style={styles.titleShape}>
+            <svg viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0,10 C 40,0 60,20 100,10 C 140,0 160,20 200,10" fill="none" stroke="#e4141c" strokeWidth="2"></path>
+            </svg>
+          </div>
+          <p style={styles.sectionTitleP}>Join our team and grow your career with exciting opportunities</p>
+        </div>
+
         {/* Search and Filter */}
         <div style={styles.searchContainer}>
           <div style={styles.searchInputContainer}>
@@ -248,11 +257,10 @@ const Jobs = () => {
         onRequestClose={closeModal}
         style={customModalStyles}
         contentLabel="Job Application"
-        
       >
         {!submitSuccess ? (
           <>
-            <div style={styles.modalHeader} className='abc' >
+            <div style={styles.modalHeader}>
               <h2 style={styles.modalTitle}>Apply for {selectedJob?.title}</h2>
               <div style={styles.jobMeta}>
                 <span style={styles.jobMetaItem}>{selectedJob?.job_type}</span>
@@ -377,7 +385,7 @@ const Jobs = () => {
           <div style={styles.submitSuccess}>
             <FiCheckCircle style={styles.successIcon} />
             <h3 style={styles.successTitle}>Application Submitted!</h3>
-            <p style={styles.successMessage}>Thank you for applying to {selectedJob?.title}. We&apos;ll review your application and get back to you soon.</p>
+            <p style={styles.successMessage}>Thank you for applying to {selectedJob?.title}. We'll review your application and get back to you soon.</p>
           </div>
         )}
         <button onClick={closeModal} style={styles.closeModalButton}>
@@ -397,21 +405,73 @@ const styles = {
     scrollMarginTop: '90px',
     overflow: 'hidden',
   },
-  loadingContainer: {
+  heroContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '400px',
+    overflow: 'hidden',
+    marginTop: '60px',
+  },
+  heroBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundImage: `url(${careers})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    filter: 'brightness(0.7)',
+    zIndex: -1
+  },
+  heroOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 0
+  },
+  heroContent: {
+    position: 'relative',
+    zIndex: 1,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    textAlign: 'center',
+    padding: '0 20px'
+  },
+  heroTitle: {
+    fontSize: '3rem',
+    fontWeight: '700',
+    marginBottom: '1rem',
+    textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+  },
+  heroSubtitle: {
+    fontSize: '1.5rem',
+    fontWeight: '300',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+    maxWidth: '800px'
+  },
+  loadingOverlay: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     height: '300px',
   },
-  spinner: {
-    border: '5px solid #f3f3f3',
-    borderTop: '5px solid #e4141c',
-    borderRadius: '50%',
-    width: '50px',
-    height: '50px',
-    animation: 'spin 1s linear infinite',
+  loadingGif: {
+    width: '100px',
+    height: '100px',
     marginBottom: '20px',
+  },
+  loadingText: {
+    fontSize: '1.2rem',
+    color: '#333',
   },
   errorContainer: {
     padding: '40px',
@@ -589,7 +649,6 @@ const styles = {
     borderRadius: '12px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
   },
-  // Modal styles
   modalHeader: {
     textAlign: 'center',
     marginBottom: '25px',

@@ -8,17 +8,17 @@ import 'simplebar-react/dist/simplebar.min.css'
 import { CBadge, CNavLink, CSidebarNav } from '@coreui/react-pro'
 
 export const AppSidebarNav = ({ items }) => {
-  const navLink = (name, icon, badge, indent = false) => {
+  const navLink = (name, icon, badge, indent = false, isProfile = false) => {
     return (
       <>
         {icon
           ? icon
           : indent && (
-              <span className="nav-icon">
+              <span className="nav-icon bg-vlack">
                 <span className="nav-icon-bullet"></span>
               </span>
             )}
-        {name && name}
+        {name && <span className={isProfile ? 'profile-text' : ''}>{name}</span>}
         {badge && (
           <CBadge color={badge.color} className="ms-auto">
             {badge.text}
@@ -31,14 +31,21 @@ export const AppSidebarNav = ({ items }) => {
   const navItem = (item, index, indent = false) => {
     const { component, name, badge, icon, ...rest } = item
     const Component = component
+    const isProfile = name === 'Profile' // Check if this is the Profile item
+    
     return (
-      <Component as="div" key={index}>
+      <Component 
+       color="dark"
+        as="div" 
+        key={index} 
+        className={isProfile ? 'profile-item' : ''}
+      >
         {rest.to || rest.href ? (
           <CNavLink {...(rest.to && { as: NavLink })} {...rest}>
-            {navLink(name, icon, badge, indent)}
+            {navLink(name, icon, badge, indent, isProfile)}
           </CNavLink>
         ) : (
-          navLink(name, icon, badge, indent)
+          navLink(name, icon, badge, indent, isProfile)
         )}
       </Component>
     )

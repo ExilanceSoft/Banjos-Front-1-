@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Gallerybg from '../../assets/img/galleryb.jpg';
+import './Gallery.css'; // Create this CSS file for additional styles
 
 const Gallery = () => {
   const [categories, setCategories] = useState([]);
@@ -42,187 +45,369 @@ const Gallery = () => {
   const openImageModal = (image) => {
     setSelectedImage(image);
     setIsModalOpen(true);
-    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    document.body.style.overflow = 'hidden';
   };
 
   const closeImageModal = () => {
     setIsModalOpen(false);
-    document.body.style.overflow = 'auto'; // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   };
 
   if (loading) {
     return (
-      <section id="menu" className="menu section abc">
+      <motion.section 
+        id="menu" 
+        className="menu section abc"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <div className="container text-center py-5">
-          <div className="loading-overlay">
-            <img 
+          <motion.div 
+            className="loading-overlay"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <motion.img 
               src="/pizza.gif"
               alt="Loading ..." 
               className="loading-gif"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
-            <div className="loading-text">Preparing Your Menu...</div>
-          </div>
+            <motion.div 
+              className="loading-text"
+              animate={{
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+              }}
+            >
+              Preparing Your Gallery...
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <section style={styles.gallerySection} className='abc'>
-      <div style={styles.container}>
-        <h2 style={styles.mainTitle}>Our Gallery</h2>
-        <div style={styles.titleUnderline}></div>
-        
-        <h3 style={styles.checkOurGallery}>Check Our Gallery</h3>
+    <>
+      {/* Banner Section */}
+      <motion.div 
+        style={styles.bannerContainer}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <img 
+          src={Gallerybg}
+          alt="Gallery Banner" 
+          style={styles.bannerImage}
+        />
+        <div style={styles.bannerOverlay}>
+          <motion.h1 
+            style={styles.bannerTitle}
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            Our Culinary Gallery
+          </motion.h1>
+          <motion.p 
+            style={styles.bannerText}
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            A visual feast of our most exquisite creations
+          </motion.p>
+        </div>
+      </motion.div>
 
-        <div style={styles.categoryFilter}>
-          {categories.map(category => (
-            <button
-              key={category.id}
-              style={activeCategory === category.id ? 
-                {...styles.categoryButton, ...styles.activeCategoryButton} : 
-                styles.categoryButton}
-              onClick={() => setActiveCategory(category.id)}
+      {/* Gallery Section */}
+      <motion.section 
+        style={styles.gallerySection}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
+        <div style={styles.container}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <h2 style={styles.mainTitle}>GALLERY</h2>
+            <div style={styles.titleUnderline}></div>
+            
+            <motion.h3 
+              style={styles.checkOurGallery}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
             >
-              {category.name}
-            </button>
-          ))}
+              Discover Our Culinary Art
+            </motion.h3>
+          </motion.div>
+
+          <motion.div 
+            style={styles.categoryFilter}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+          >
+            {categories.map(category => (
+              <motion.button
+                key={category.id}
+                style={activeCategory === category.id ? 
+                  {...styles.categoryButton, ...styles.activeCategoryButton} : 
+                  styles.categoryButton}
+                onClick={() => setActiveCategory(category.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {category.name}
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* Gallery Grid */}
+          <motion.div 
+            style={styles.galleryGrid}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+          >
+            <AnimatePresence>
+              {filteredImages.map((image, index) => (
+                <motion.div 
+                  key={image.id} 
+                  style={styles.galleryItem} 
+                  onClick={() => openImageModal(image)}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ 
+                    duration: 0.5,
+                    delay: index * 0.05,
+                    type: 'spring',
+                    stiffness: 100
+                  }}
+                  layout
+                >
+                  <div style={styles.imageContainer}>
+                    <motion.img 
+                      src={`http://64.227.163.17:8000${image.file_path.startsWith('/') ? '' : '/'}${image.file_path}`} 
+                      alt={image.name} 
+                      style={styles.galleryImage}
+                      loading="lazy"
+                      initial={{ scale: 1 }}
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <div style={styles.imageOverlay}>
+                      <h3 style={styles.imageTitle}>{image.name}</h3>
+                      {image.description && (
+                        <p style={styles.imageDescription}>{image.description}</p>
+                      )}
+                      <motion.div
+                        style={styles.viewButton}
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                      >
+                        View
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
 
-        {/* Gallery Grid */}
-        <div style={styles.galleryGrid}>
-          {filteredImages.map(image => (
-            <div key={image.id} style={styles.galleryItem} onClick={() => openImageModal(image)}>
-              <div style={styles.imageContainer}>
-                <img 
-                  src={`http://64.227.163.17:8000${image.file_path.startsWith('/') ? '' : '/'}${image.file_path}`} 
-                  alt={image.name} 
-                  style={styles.galleryImage}
-                  loading="lazy"
+        {/* Image Modal */}
+        <AnimatePresence>
+          {isModalOpen && selectedImage && (
+            <motion.div 
+              style={styles.modalOverlay} 
+              onClick={closeImageModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div 
+                style={styles.modalContent} 
+                onClick={(e) => e.stopPropagation()}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <motion.button 
+                  style={styles.closeButton} 
+                  onClick={closeImageModal}
+                  whileHover={{ backgroundColor: '#e4141c' }}
+                >
+                  &times;
+                </motion.button>
+                <img
+                  src={`http://64.227.163.17:8000${selectedImage.file_path.startsWith('/') ? '' : '/'}${selectedImage.file_path}`}
+                  alt={selectedImage.name}
+                  style={styles.modalImage}
                 />
-                <div style={styles.imageOverlay}>
-                  <h3 style={styles.imageTitle}>{image.name}</h3>
-                  {image.description && (
-                    <p style={styles.imageDescription}>{image.description}</p>
+                <div style={styles.modalText}>
+                  <h3 style={styles.modalTitle}>{selectedImage.name}</h3>
+                  {selectedImage.description && (
+                    <p style={styles.modalDescription}>{selectedImage.description}</p>
                   )}
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Image Modal */}
-      {isModalOpen && selectedImage && (
-        <div style={styles.modalOverlay} onClick={closeImageModal}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button style={styles.closeButton} onClick={closeImageModal}>
-              &times;
-            </button>
-            <img
-              src={`http://64.227.163.17:8000${selectedImage.file_path.startsWith('/') ? '' : '/'}${selectedImage.file_path}`}
-              alt={selectedImage.name}
-              style={styles.modalImage}
-            />
-            <div style={styles.modalText}>
-              <h3 style={styles.modalTitle}>{selectedImage.name}</h3>
-              {selectedImage.description && (
-                <p style={styles.modalDescription}>{selectedImage.description}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.section>
+    </>
   );
 };
 
-// Styles
+// Modern Gallery Styles
 const styles = {
+  // Banner Styles
+  bannerContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '60vh',
+    minHeight: '400px',
+    maxHeight: '700px',
+    overflow: 'hidden',
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    filter: 'brightness(0.7)',
+  },
+  bannerOverlay: {
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: 'white',
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)',
+  },
+  bannerTitle: {
+    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+    fontWeight: '800',
+    marginBottom: '1rem',
+    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)',
+    color: '#ffc107',
+    fontFamily: '"Playfair Display", serif',
+    letterSpacing: '1px',
+  },
+  bannerText: {
+    fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+    fontWeight: '400',
+    textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)',
+    maxWidth: '800px',
+    margin: '0 auto',
+    fontFamily: '"Poppins", sans-serif',
+    lineHeight: '1.6',
+  },
+  
+  // Gallery Styles
   gallerySection: {
-    padding: '60px 0',
+    padding: '80px 0',
     backgroundColor: '#f9f9f9',
     fontFamily: "'Poppins', sans-serif",
   },
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '0 15px',
+    padding: '0 20px',
   },
   mainTitle: {
-    fontSize: '15px',
+    fontSize: '14px',
     fontWeight: '800',
     color: 'rgb(26, 24, 20)',
     marginBottom: '15px',
     position: 'relative',
     textAlign: 'center',
+    letterSpacing: '3px',
+    textTransform: 'uppercase',
   },
   titleUnderline: {
     width: '80px',
     height: '3px',
-    backgroundColor: '#e4141c',
+    backgroundColor: '#ffc107',
     margin: '0 auto 40px',
     textAlign: 'center',
   },
   checkOurGallery: {
-    fontSize: '25px',
+    fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
     fontWeight: '700',
-    marginBottom: '10px',
-    background: 'linear-gradient(120deg, rgb(51, 51, 51), rgb(228, 20, 28))',
+    marginBottom: '40px',
+    background: 'linear-gradient(135deg, #333 0%, #ffc107 100%)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
     position: 'relative',
     textAlign: 'center',
-    margin: '20px 0'
+    fontFamily: '"Playfair Display", serif',
   },
   categoryFilter: {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    gap: '10px',
-    marginBottom: '30px',
+    gap: '15px',
+    marginBottom: '40px',
   },
   categoryButton: {
-    padding: '8px 20px',
+    padding: '12px 25px',
     backgroundColor: '#fff',
-    border: '1px solid #ddd',
+    border: '1px solid #e0e0e0',
     borderRadius: '30px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    fontSize: '14px',
-    fontWeight: '500',
+    fontSize: '15px',
+    fontWeight: '600',
     color: '#333',
-    '&:hover': {
-      backgroundColor: '#e4141c',
-      color: '#fff',
-      borderColor: '#e4141c',
-    },
+    boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+    fontFamily: '"Poppins", sans-serif',
   },
   activeCategoryButton: {
-    backgroundColor: '#e4141c',
+    backgroundColor: '#ffc107',
     color: '#fff',
-    borderColor: '#e4141c',
+    borderColor: '#ffc107',
+    boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
   },
   galleryGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: '20px',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: '25px',
   },
   galleryItem: {
-    borderRadius: '8px',
+    borderRadius: '12px',
     overflow: 'hidden',
-    boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
-    transition: 'transform 0.3s ease',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+    transition: 'all 0.3s ease',
     cursor: 'pointer',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-    },
+    backgroundColor: '#fff',
+    position: 'relative',
   },
   imageContainer: {
     position: 'relative',
     width: '100%',
-    height: '250px',
+    height: '280px',
     overflow: 'hidden',
   },
   galleryImage: {
@@ -230,32 +415,57 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     transition: 'transform 0.5s ease',
-    '&:hover': {
-      transform: 'scale(1.1)',
-    },
   },
   imageOverlay: {
     position: 'absolute',
-    bottom: '0',
+    top: '0',
     left: '0',
     right: '0',
-    background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+    bottom: '0',
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%)',
     color: '#fff',
     padding: '20px',
-    transform: 'translateY(100%)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    opacity: 0,
+    transition: 'opacity 0.3s ease',
+    'div:hover &': {
+      opacity: 1,
+    },
+  },
+  imageTitle: {
+    margin: '0 0 10px',
+    fontSize: '20px',
+    fontWeight: '600',
+    transform: 'translateY(20px)',
     transition: 'transform 0.3s ease',
     'div:hover &': {
       transform: 'translateY(0)',
     },
   },
-  imageTitle: {
-    margin: '0 0 10px',
-    fontSize: '18px',
-  },
   imageDescription: {
     margin: '0',
     fontSize: '14px',
-    opacity: '0.8',
+    opacity: 0.8,
+    transform: 'translateY(20px)',
+    transition: 'transform 0.3s ease 0.1s',
+    'div:hover &': {
+      transform: 'translateY(0)',
+    },
+  },
+  viewButton: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    color: '#333',
+    padding: '10px 25px',
+    borderRadius: '30px',
+    fontWeight: '600',
+    fontSize: '16px',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
   },
   // Modal Styles
   modalOverlay: {
@@ -264,22 +474,24 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
     padding: '20px',
+    backdropFilter: 'blur(5px)',
   },
   modalContent: {
     position: 'relative',
     maxWidth: '90%',
     maxHeight: '90%',
     backgroundColor: '#fff',
-    borderRadius: '8px',
+    borderRadius: '16px',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
   },
   modalImage: {
     width: '100%',
@@ -287,83 +499,40 @@ const styles = {
     objectFit: 'contain',
   },
   modalText: {
-    padding: '20px',
+    padding: '30px',
     textAlign: 'center',
   },
   modalTitle: {
-    margin: '0 0 10px',
-    fontSize: '24px',
+    margin: '0 0 15px',
+    fontSize: '28px',
     color: '#333',
+    fontFamily: '"Playfair Display", serif',
   },
   modalDescription: {
     margin: '0',
     fontSize: '16px',
     color: '#666',
+    lineHeight: '1.8',
+    maxWidth: '600px',
+    margin: '0 auto',
   },
   closeButton: {
     position: 'absolute',
-    top: '10px',
-    right: '10px',
-    background: 'rgba(0, 0, 0, 0.5)',
+    top: '15px',
+    right: '15px',
+    background: 'rgba(0, 0, 0, 0.7)',
     color: '#fff',
     border: 'none',
     borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    fontSize: '24px',
+    width: '50px',
+    height: '50px',
+    fontSize: '28px',
     cursor: 'pointer',
     zIndex: 1001,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    '&:hover': {
-      backgroundColor: '#e4141c',
-    },
-  },
-  loadingContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#f9f9f9',
-  },
-  loadingContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '20px',
-  },
-  loadingSpinner: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    background: 'conic-gradient(#e4141c 0%, #f3f3f3 0%)',
-    animation: 'spin 1.2s linear infinite',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  spinnerInner: {
-    width: '80%',
-    height: '80%',
-    borderRadius: '50%',
-    backgroundColor: '#f9f9f9',
-  },
-  loadingText: {
-    fontSize: '18px',
-    color: '#333',
-    fontFamily: "'Poppins', sans-serif",
-    fontWeight: '500',
-    animation: 'pulse 1.5s infinite ease-in-out',
-  },
-  '@keyframes spin': {
-    '0%': { transform: 'rotate(0deg)', background: 'conic-gradient(#e4141c 0%, #f3f3f3 0%)' },
-    '50%': { background: 'conic-gradient(#e4141c 50%, #f3f3f3 0%)' },
-    '100%': { transform: 'rotate(360deg)', background: 'conic-gradient(#e4141c 100%, #f3f3f3 0%)' },
-  },
-  '@keyframes pulse': {
-    '0%, 100%': { opacity: 0.8 },
-    '50%': { opacity: 1 },
+    transition: 'all 0.3s ease',
   },
 };
 

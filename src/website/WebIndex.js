@@ -23,7 +23,8 @@ import Franchise from './Franchise';
 import './GoshalaPage.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import restaurantbg from '../assets/brand/background.jpg'
 // Loading Screen Component
 const LoadingScreen = () => (
   <div className="loading-overlay">
@@ -53,14 +54,18 @@ const Home = () => (
 function WebIndex() {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Preload background image
   useEffect(() => {
-    const loadAssets = async () => {
-      // Simulate loading time (replace with actual asset loading)
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      setIsLoading(false);
+    const img = new Image();
+    img.src = {restaurantbg}; // Same path as in CSS
+    img.onload = () => {
+      // Simulate loading time (you can adjust this)
+      setTimeout(() => setIsLoading(false), 2000);
     };
-
-    loadAssets();
+    img.onerror = () => {
+      // If image fails to load, still continue
+      setTimeout(() => setIsLoading(false), 2000);
+    };
   }, []);
 
   return (

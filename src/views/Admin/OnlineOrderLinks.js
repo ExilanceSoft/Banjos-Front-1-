@@ -253,7 +253,7 @@ const OnlineOrderLinks = () => {
     <CCard className="mb-4">
       <CCardHeader>
         <div className="d-flex justify-content-between align-items-center">
-          <h2 className="mb-0">Online Order Links</h2>
+          <h4 className="mb-0">Online Order Links</h4>
           <div className="d-flex">
             <CInputGroup className="me-3" style={{ width: '300px' }}>
               <CInputGroupText>
@@ -266,8 +266,8 @@ const OnlineOrderLinks = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </CInputGroup>
-            <CButton color="primary" onClick={openAddModal}>
-              <CIcon icon={cilPlus} className="me-2" />
+            <CButton color="danger" onClick={openAddModal} className='rounded-pill'>
+              <CIcon icon={cilPlus} className="me-2 "  />
               Add New Link
             </CButton>
           </div>

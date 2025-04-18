@@ -243,7 +243,7 @@ const GalleryCategoriesPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </CInputGroup>
-          <CButton color="primary" onClick={() => setModalVisible(true)}>
+          <CButton color="danger" onClick={() => setModalVisible(true)}>
             <CIcon icon={cilPlus} className="me-2" />
             Add New Category
           </CButton>

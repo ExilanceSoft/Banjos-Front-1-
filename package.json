@@ -5,26 +5,24 @@
   "config": {
     "theme": "bright",
     "zipPrefix": "",
-
-  "name": "@coreui/coreui-pro-react-admin-template-cra",
-  "version": "5.0.0",
-  "description": "CoreUI PRO React Admin Template",
-  "config": {
-    "theme": "bright",
-    "zipPrefix": ".zip/coreui-pro-react-admin-template-theme",
-    "bundler": "cra"
-  },
-  "homepage": ".",
-  "bugs": {
-    "url": ""
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "license": "SEE LICENSE IN LICENSE",
-  "author": "",
-
+    "name": "@coreui/coreui-pro-react-admin-template-cra",
+    "version": "5.0.0",
+    "description": "CoreUI PRO React Admin Template",
+    "config": {
+      "theme": "bright",
+      "zipPrefix": ".zip/coreui-pro-react-admin-template-theme",
+      "bundler": "cra"
+    },
+    "homepage": ".",
+    "bugs": {
+      "url": ""
+    },
+    "repository": {
+      "type": "git",
+      "url": ""
+    },
+    "license": "SEE LICENSE IN LICENSE",
+    "author": "",
     "url": "https://github.com/coreui/coreui-pro-react-admin-template-cra/issues"
   },
   "repository": {
@@ -75,6 +73,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^11.18.2",
     "glightbox": "^3.3.1",
+    "gsap": "^3.12.7",
     "i18next": "^23.10.1",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.5.0",

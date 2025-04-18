@@ -70,111 +70,152 @@ const MenuPage = () => {
   }
 
   return (
-    <section id="menu" style={styles.menuSection} className='abc'>
-      <div className="container" style={styles.container}>
-        <div style={styles.sectionHeader}>
-          <h2 style={styles.sectionTitle}>Our Menu</h2>
-          <p style={styles.sectionSubtitle}>
-            Check Our <span style={styles.highlight}>Yummy Menu</span>
-          </p>
+    <>
+      {/* Banner Section */}
+      <section style={styles.bannerSection}>
+        <div style={styles.bannerContainer}>
+          <div style={styles.bannerContent}>
+            <h1 style={styles.bannerTitle} className='mt-5'>Our Delicious Menu</h1>
+            <p style={styles.bannerText}>
+              Explore our wide selection of mouth-watering dishes prepared with love and the finest ingredients
+            </p>
+          </div>
         </div>
+      </section>
 
-        {categories.length > 0 && (
-          <ul className="nav nav-tabs d-flex justify-content-center" style={styles.navTabs}>
-            {categories.map(category => (
-              <li className="nav-item" key={category.id} style={styles.navItem}>
-                <button
-                  className={`nav-link ${activeTab === category.name ? 'active' : ''}`}
-                  style={activeTab === category.name ? 
-                    {...styles.navLink, ...styles.activeNavLink} : 
-                    styles.navLink}
-                  onClick={() => setActiveTab(category.name)}
-                >
-                  {/* <div style={styles.categoryImageContainer}>
-                    <img 
-                      src={`${BASE_URL}/static/images/categories/${category.name.toLowerCase()}.jpg`}
-                      alt={category.name}
-                      style={styles.categoryImage}
-                      onError={(e) => {
-                        e.target.src = `${BASE_URL}/static/images/categories/default.jpg`;
-                      }}
-                    />
-                  </div> */}
-                  <h4 style={styles.navTitle}>{category.name}</h4>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Menu Section */}
+      <section id="menu" style={styles.menuSection} >
+        <div className="container" style={styles.container}>
+          <div style={styles.sectionHeader} className='mt-5'>
+            <h2 style={styles.sectionTitle}> Check Our Yummy Menu</h2>
+            {/* <p style={styles.sectionSubtitle}>
+              Check Our <span style={styles.highlight}>Yummy Menu</span>
+            </p> */}
+          </div>
 
-        <div className="tab-content" style={styles.tabContent}>
-          {loading ? (
-            <section id="menu" className="menu section abc">
-            <div className="container text-center py-5">
-              <div className="loading-overlay">
-                <img 
-                  src="/pizza.gif"
-                  alt="Loading ..." 
-                  className="loading-gif"
-                />
-                <div className="loading-text">Preparing Your Menu...</div>
-              </div>
-            </div>
-          </section>
-          ) : (
-            <div className="tab-pane fade show active" style={styles.tabPane}>
-              <div className="row gy-5" style={styles.menuItemsRow}>
-                {filteredItems.length > 0 ? (
-                  filteredItems.map(item => (
-                    <div className="col-lg-4 menu-item" key={item.id} style={styles.menuItem}>
-                      <a 
-                        href={`${BASE_URL}${item.image_url}`}
-                        className="glightbox"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          openImageLightbox(`${BASE_URL}${item.image_url}`);
-                        }}
-                        style={styles.menuImageLink}
-                      >
-                        <img 
-                          src={`${BASE_URL}${item.image_url}`}
-                          className="menu-img img-fluid" 
-                          alt={item.name}
-                          style={styles.menuImage}
-                        />
-                      </a>
-                      <h4 style={styles.menuItemH4}>{item.name}</h4>
-                      <p className="ingredients" style={styles.ingredients}>
-                        {item.description}
-                      </p>
-                      <div style={styles.priceContainer}>
-                      {item.parcel_price && (
-                          <p className="parcel-price" style={styles.parcelPrice}>
-                            Takeaway: ${item.parcel_price.toFixed(2)}
-                          </p>
-                        )}
-                        <p className="price" style={styles.price}>
-                          ${item.price.toFixed(2)}
-                        </p>
-                       
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-12" style={styles.noItems}>
-                    No items found in this category
-                  </div>
-                )}
-              </div>
-            </div>
+          {categories.length > 0 && (
+            <ul className="nav nav-tabs d-flex justify-content-center" style={styles.navTabs}>
+              {categories.map(category => (
+                <li className="nav-item" key={category.id} style={styles.navItem}>
+                  <button
+                    className={`nav-link ${activeTab === category.name ? 'active' : ''}`}
+                    style={activeTab === category.name ? 
+                      {...styles.navLink, ...styles.activeNavLink} : 
+                      styles.navLink}
+                    onClick={() => setActiveTab(category.name)}
+                  >
+                    <h4 style={styles.navTitle}>{category.name}</h4>
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
+
+          <div className="tab-content" style={styles.tabContent}>
+            {loading ? (
+              <section id="menu" className="menu section abc">
+                <div className="container text-center py-5">
+                  <div className="loading-overlay">
+                    <img 
+                      src="/pizza.gif"
+                      alt="Loading ..." 
+                      className="loading-gif"
+                    />
+                    <div className="loading-text">Preparing Your Menu...</div>
+                  </div>
+                </div>
+              </section>
+            ) : (
+              <div className="tab-pane fade show active" style={styles.tabPane}>
+                <div className="row gy-5" style={styles.menuItemsRow}>
+                  {filteredItems.length > 0 ? (
+                    filteredItems.map(item => (
+                      <div className="col-lg-4 menu-item" key={item.id} style={styles.menuItem}>
+                        <a 
+                          href={`${BASE_URL}${item.image_url}`}
+                          className="glightbox"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openImageLightbox(`${BASE_URL}${item.image_url}`);
+                          }}
+                          style={styles.menuImageLink}
+                        >
+                          <img 
+                            src={`${BASE_URL}${item.image_url}`}
+                            className="menu-img img-fluid" 
+                            alt={item.name}
+                            style={styles.menuImage}
+                          />
+                        </a>
+                        <h4 style={styles.menuItemH4}>{item.name}</h4>
+                        <p className="ingredients" style={styles.ingredients}>
+                          {item.description}
+                        </p>
+                        <div style={styles.priceContainer}>
+                        {item.parcel_price && (
+                            <p className="parcel-price" style={styles.parcelPrice}>
+                              Takeaway: ${item.parcel_price.toFixed(2)}
+                            </p>
+                          )}
+                          <p className="price" style={styles.price}>
+                            ${item.price.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-12" style={styles.noItems}>
+                      No items found in this category
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
 const styles = {
+  // Banner Styles
+  bannerSection: {
+    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: '800px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    textAlign: 'center',
+    padding: '20px',
+  },
+  bannerContainer: {
+    maxWidth: '1200px',
+    width: '100%',
+    padding: '0 20px',
+  },
+  bannerContent: {
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  bannerTitle: {
+    fontSize: '48px',
+    fontWeight: '700',
+    marginBottom: '20px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+    color:'#ffc107',
+  },
+  bannerText: {
+    fontSize: '20px',
+    lineHeight: '1.6',
+    marginBottom: '0',
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+  },
+  
+  // Existing styles
   menuSection: {
     padding: '60px 0',
     backgroundColor: '#fff',
@@ -299,5 +340,16 @@ const styles = {
     from: { opacity: 0 },
     to: { opacity: 1 },
   },
+  priceContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '20px',
+  },
+  parcelPrice: {
+    fontSize: '18px',
+    color: '#37373f',
+    marginTop: '10px',
+  },
 };
+
 export default MenuPage;

@@ -354,7 +354,7 @@ const MenuManagement = () => {
               <CFormSelect
                 value={selectedCategory}
                 onChange={handleCategoryFilter}
-                className="form-select-lg"
+                className="form-select-md mb-2"
               >
                 <option value="">All Categories</option>
                 {categories.map((category) => (
@@ -476,9 +476,9 @@ const MenuManagement = () => {
                           {searchTerm ? 'Try a different search term' : 'Add your first menu item to get started'}
                         </p>
                         <CButton 
-                          color="primary" 
-                          onClick={() => setModalVisible(true)}
-                          className="mt-2"
+                            
+                           onClick={() => setModalVisible(true)}
+                          className="btn btn-danger mt-2"
                         >
                           <CIcon icon={cilPlus} className="me-2" />
                           Add Menu Item

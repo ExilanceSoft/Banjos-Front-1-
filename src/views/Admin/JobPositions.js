@@ -284,7 +284,7 @@ const JobPositions = () => {
     <div className="job-positions-container">
       <CCard>
         <CCardHeader>
-          <h2 className="mb-0">Job Positions Management</h2>
+          <h4 className="mb-0">Job Positions Management</h4>
           <p className="text-muted mb-0">Manage all job positions in your organization</p>
         </CCardHeader>
         <CCardBody>
@@ -333,7 +333,7 @@ const JobPositions = () => {
               </CFormSelect>
             </CCol>
             <CCol md={4} className="text-end">
-              <CButton color="primary" onClick={() => openModal()} className="mb-3">
+              <CButton color="danger" onClick={() => openModal()} className="mb-3 rounded-pill">
                 <CIcon icon={cilPlus} className="me-2" />
                 Add New Position
               </CButton>
@@ -418,45 +418,45 @@ const JobPositions = () => {
                           />
                         )}
                       </CTableDataCell>
-                      <CTableDataCell>
-                      <div className="d-flex">
-                        <CTooltip content="View Details">
-                          <CButton
-                            color="info"
-                            variant="ghost"
-                            shape="rounded-pill"
-                            size="sm"
-                            onClick={() => openViewModal(job)}
-                            className="me-2"
-                          >
-                            <CIcon icon={cilInfo} />
-                          </CButton>
-                        </CTooltip>
-                        <CTooltip content="Edit">
-                          <CButton
-                            color="warning"
-                            variant="ghost"
-                            shape="rounded-pill"
-                            size="sm"
-                            onClick={() => openModal(job)}
-                            className="me-2"
-                          >
-                            <CIcon icon={cilPencil} />
-                          </CButton>
-                        </CTooltip>
-                        <CTooltip content="Delete">
-                          <CButton
-                            color="danger"
-                            variant="ghost"
-                            shape="rounded-pill"
-                            size="sm"
-                            onClick={() => handleDelete(job.id)}
-                          >
-                            <CIcon icon={cilTrash} />
-                          </CButton>
-                        </CTooltip>
-                      </div>
-                    </CTableDataCell>
+                         <CTableDataCell className="text-center">
+  <div className="d-flex justify-content-center">
+    <CTooltip content="View Details">
+      <CButton
+        color="outline-info"
+        variant="ghost"
+        shape="rounded-pill"
+        size="sm"
+        onClick={() => openViewModal(job)}
+        className="me-2"
+      >
+        <CIcon icon={cilInfo} />
+      </CButton>
+    </CTooltip>
+    <CTooltip content="Edit">
+      <CButton
+        color="outline-warning"
+        variant="ghost"
+        shape="rounded-pill"
+        size="sm"
+        onClick={() => openModal(job)}
+        className="me-2"
+      >
+        <CIcon icon={cilPencil} />
+      </CButton>
+    </CTooltip>
+    <CTooltip content="Delete">
+      <CButton
+        color="outline-danger"
+        variant="ghost"
+        shape="rounded-pill"
+        size="sm"
+        onClick={() => handleDelete(job.id)}
+      >
+        <CIcon icon={cilTrash} />
+      </CButton>
+    </CTooltip>
+  </div>
+</CTableDataCell>
                     </CTableRow>
                   ))}
                 </CTableBody>

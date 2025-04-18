@@ -11,6 +11,9 @@ import {
 import { AppSidebarNav } from './AppSidebarNav';
 import navigation from '../_nav';
 
+// Import your logo image
+import logo from '../assets/images/banjos.png'; // Update path if different
+
 const AppSidebar = () => {
   const dispatch = useDispatch();
   const unfoldable = useSelector((state) => state.sidebarUnfoldable);
@@ -28,17 +31,16 @@ const AppSidebar = () => {
     >
       {/* Sidebar Header */}
       <CSidebarHeader className="bg-primary border-bottom d-flex align-items-center justify-content-between">
-        {/* Sidebar Brand */}
+        {/* Sidebar Brand with Logo */}
         <CSidebarBrand as={NavLink} to="/" className="d-flex align-items-center">
-          <span className="sidebar-brand-full" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>
-            Banjos
-          </span>
-          <span className="sidebar-brand-narrow" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>
-            G
-          </span>
+          <img
+            src={logo}
+            alt="Banjos Logo"
+            style={{ height: '32px', width: '105px' }} // Adjust size as needed
+          />
         </CSidebarBrand>
 
-        {/* Close Button (Always Visible) */}
+        {/* Close Button */}
         <CCloseButton
           dark
           onClick={() => dispatch({ type: 'set', sidebarShow: false })}
@@ -55,7 +57,7 @@ const AppSidebar = () => {
       {/* Sidebar Navigation */}
       <AppSidebarNav items={navigation} />
 
-      {/* Sidebar Toggler (For Expand/Collapse) */}
+      {/* Sidebar Toggler */}
       <CSidebarToggler
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       />

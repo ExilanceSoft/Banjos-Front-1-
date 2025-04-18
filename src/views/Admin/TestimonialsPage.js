@@ -242,7 +242,7 @@ const AdminTestimonialsPage = () => {
                 </p>
               </div>
               <CButton 
-                color="primary" 
+                color="danger" 
                 onClick={() => setModalVisible(true)}
               >
                 <CIcon icon={cilPlus} className="me-2" />

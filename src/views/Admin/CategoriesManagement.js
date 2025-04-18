@@ -202,7 +202,7 @@ const CategoriesManagement = () => {
             </CCol>
             <CCol xs={12} md={6} className="text-md-end mt-3 mt-md-0">
               <CButton 
-                color="primary" 
+                color="danger" 
                 onClick={() => setModalVisible(true)}
                 shape="rounded-pill"
               >

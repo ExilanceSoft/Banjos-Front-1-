@@ -1,147 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import logo from '../../assets/img/logo.png';
-import { FaDownload } from 'react-icons/fa';
+import logo from '../../assets/images/banjos.png';
+import { FaFileDownload } from 'react-icons/fa'; // Import download icon from react-icons
 
-const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileNavVisible, setIsMobileNavVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleMobileNav = () => setIsMobileNavVisible(!isMobileNavVisible);
-  const closeMobileNav = () => setIsMobileNavVisible(false);
-
-  const handleDownloadBrochure = () => {
-    // Replace with your actual PDF path in the public folder
-    const pdfUrl = '/brochure.pdf';
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = 'BurgerCompany_Brochure.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  return (
-    <HeaderContainer className={isScrolled ? 'scrolled' : ''}>
-      <HeaderContent>
-        <Logo to="/">
-          <LogoImage src={logo} alt="The Burger Company" />
-        </Logo>
-
-        <Navbar className={isMobileNavVisible ? 'mobile-active' : ''}>
-          <NavList>
-            {[
-              { path: '/', name: 'Home' },
-              { path: '/WebIndex/about', name: 'About Us' },
-              { path: '/WebIndex/menu', name: 'Our Menu' },
-              { path: '/WebIndex/Galleryin', name: 'Gallery' },
-              { path: '/WebIndex/Branches', name: 'Locations' },
-              { path: '/WebIndex/Job', name: 'Career' },
-              { path: '/WebIndex/contact', name: 'Contact Us' },
-            ].map((link) => (
-              <NavItem key={link.path}>
-                <StyledNavLink 
-                  to={link.path} 
-                  onClick={closeMobileNav}
-                  activeClassName="active"
-                >
-                  {link.name}
-                </StyledNavLink>
-              </NavItem>
-            ))}
-            
-            <NavItem>
-              <DownloadButton onClick={handleDownloadBrochure} title="Download Brochure">
-                <FaDownload />
-              </DownloadButton>
-            </NavItem>
-          </NavList>
-        </Navbar>
-
-        <MobileToggle onClick={toggleMobileNav}>
-          {isMobileNavVisible ? <i className="bi bi-x"></i> : <i className="bi bi-list"></i>}
-        </MobileToggle>
-
-        <FranchiseButton to="/WebIndex/Franchise">
-          Franchise Inquiry
-        </FranchiseButton>
-      </HeaderContent>
-    </HeaderContainer>
-  );
-};
-
-// Styled Components
-const HeaderContainer = styled.header`
-  height: 90px;
-  transition: all 0.5s;
-  z-index: 997;
-  background: #fff;
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
-  position: fixed;
+// Styled components
+const HeaderWrapper = styled.header`
+  position: absolute;
+  width: 100%;
   top: 0;
   left: 0;
-  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  padding: 20px 0;
 
   &.scrolled {
-    box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.15);
-    height: 70px;
+    position: fixed;
+    background: rgba(32, 32, 32, 0.95);
+    padding: 10px 0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    animation: fadeInDown 0.5s ease;
+
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   }
 `;
 
-const HeaderContent = styled.div`
+const NavContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 `;
 
-const Logo = styled(NavLink)`
+const Logo = styled.a`
   img {
-    max-height: 60px;
-    transition: all 0.3s;
-  }
+    max-width: 180px;
+    transition: all 0.3s ease;
 
-  .scrolled & img {
-    max-height: 50px;
-  }
-`;
-
-const LogoImage = styled.img`
-  max-height: 60px;
-  transition: all 0.3s;
-
-  .scrolled & {
-    max-height: 50px;
+    .scrolled & {
+      max-width: 150px;
+    }
   }
 `;
 
-const Navbar = styled.nav`
-  @media (max-width: 991px) {
+const NavMenu = styled.nav`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 992px) {
     position: fixed;
-    top: 90px;
+    top: 0;
     right: -100%;
     width: 300px;
-    height: calc(100vh - 90px);
-    background: #fff;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-    overflow-y: auto;
+    height: 100vh;
+    background: #202020;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.5s ease;
     z-index: 999;
 
-    &.mobile-active {
+    &.active {
       right: 0;
     }
   }
@@ -149,114 +77,243 @@ const Navbar = styled.nav`
 
 const NavList = styled.ul`
   display: flex;
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 
-  @media (max-width: 991px) {
+  @media (max-width: 992px) {
     flex-direction: column;
+    width: 100%;
     padding: 20px;
   }
 `;
 
 const NavItem = styled.li`
   position: relative;
-  padding: 0 15px;
+  margin: 0 10px;
 
-  @media (max-width: 991px) {
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f1f1;
+  @media (max-width: 992px) {
+    margin: 10px 0;
+  }
+
+  &.active a {
+    color:rgb(255, 193, 7);
   }
 `;
 
-const StyledNavLink = styled(NavLink)`
-  color: #333;
-  font-weight: 600;
-  font-size: 16px;
-  text-decoration: none;
-  transition: 0.3s;
-  padding: 10px 0;
+const NavLink = styled.a`
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 15px;
   position: relative;
+  transition: all 0.3s ease;
+  font-size: 14px;
 
   &:hover {
-    color: rgb(228, 20, 28);
+    color: rgb(255, 193, 7);
   }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    width: calc(100% - 30px);
+    height: 2px;
+    background:rgb(255, 193, 7);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (max-width: 992px) {
+    display: block;
+    padding: 15px 0;
+    font-size: 16px;
+  }
+`;
+
+const MobileMenuButton = styled.button`
+  display: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1000;
+
+  @media (max-width: 992px) {
+    display: block;
+  }
+
+  .icon-bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+  }
+
+  &.active .icon-bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  &.active .icon-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  &.active .icon-bar:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 
   &.active {
-    color: rgb(228, 20, 28);
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: rgb(228, 20, 28);
-    }
-  }
-
-  @media (max-width: 991px) {
-    display: block;
-    padding: 10px 0;
-
-    &.active::after {
-      display: none;
-    }
+    opacity: 1;
+    visibility: visible;
   }
 `;
 
-const DownloadButton = styled.button`
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 10px 0;
-  transition: 0.3s;
+// New styled component for the download button
+const DownloadButton = styled.a`
   display: flex;
   align-items: center;
-  margin-top:-14px;
-
-  &:hover {
-    color: rgb(228, 20, 28);
-  }
-
-  @media (max-width: 991px) {
-    padding: 10px 0;
-    font-size: 24px;
-  }
-`;
-
-const MobileToggle = styled.div`
-  display: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: #333;
-
-  @media (max-width: 991px) {
-    display: block;
-  }
-`;
-
-const FranchiseButton = styled(NavLink)`
-  background: rgb(228, 20, 28);
   color: #fff;
-  padding: 10px 25px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 15px;
   margin-left: 20px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid rgb(255, 193, 7);
+  border-radius: 4px;
 
   &:hover {
-    background: #280b09;
-    color: #fff;
+    background: rgb(255, 193, 7);
+    color: #000;
   }
 
-  @media (max-width: 991px) {
-    display: none;
+  svg {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 992px) {
+    margin: 20px 0 0 0;
+    justify-content: center;
+    width: 80%;
   }
 `;
+
+const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Function to handle PDF download
+  const handleDownload = () => {
+    // Replace this URL with the actual path to your PDF file
+    const pdfUrl = '/path/to/your/file.pdf';
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = 'Banjos_Menu.pdf'; // Name of the downloaded file
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <HeaderWrapper className={isScrolled ? 'scrolled' : ''}>
+      <NavContainer>
+        <Logo href="#">
+          <img src={logo} alt="Logo" />
+        </Logo>
+
+        <MobileMenuButton 
+          className={isMenuOpen ? 'active' : ''} 
+          onClick={toggleMenu}
+          aria-label="Toggle navigation"
+        >
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+        </MobileMenuButton>
+
+        <NavMenu className={isMenuOpen ? 'active' : ''}>
+          <NavList>
+            <NavItem className="active">
+              <NavLink href="/">Home</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/about">About</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/menu">Menu</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/Branches">Branches</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/Galleryin">Gallery</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/Job">Career</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/WebIndex/contact">Contact</NavLink>
+            </NavItem>
+          </NavList>
+          
+          {/* Download PDF Button */}
+          <DownloadButton onClick={handleDownload}>
+            <FaFileDownload />
+           
+          </DownloadButton>
+        </NavMenu>
+
+        <Overlay 
+          className={isMenuOpen ? 'active' : ''} 
+          onClick={toggleMenu}
+        />
+      </NavContainer>
+    </HeaderWrapper>
+  );
+};
 
 export default Header;

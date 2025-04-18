@@ -20,17 +20,39 @@ import {
   CSpinner,
   CInputGroup,
   CInputGroupText,
-  CBadge
+  CBadge,
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CToaster,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CCallout,
+  CRow,
+  CCol
 } from '@coreui/react-pro';
-import CIcon from  '@coreui/icons-react';
-import { cilPencil, cilTrash, cilPlus, cilUser, cilLockLocked, cilPhone, cilEnvelopeOpen } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { 
+  cilPencil, 
+  cilTrash, 
+  cilPlus, 
+  cilUser, 
+  cilLockLocked, 
+  cilPhone, 
+  cilEnvelopeOpen,
+  cilWarning,
+  cilCheckCircle,
+  cilInfo,
+  cilX,
+  cilSave
+} from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 
-const UserRegistaration = () => {
+const UserRegistration = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState(null);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -56,7 +78,6 @@ const UserRegistaration = () => {
         }
       });
       setUsers(response.data);
-      setError('');
     } catch (err) {
       console.error('Failed to fetch users:', err);
       if (err.response?.status === 401) {
@@ -85,7 +106,13 @@ const UserRegistaration = () => {
           handleLogout();
         }
       } else {
-        setError(err.response?.data?.detail || 'Failed to fetch users. Please try again later.');
+        setToast(<CToast color="danger" visible={true}>
+          <CToastBody>
+            <CIcon icon={cilWarning} className="me-2" />
+            {err.response?.data?.detail || 'Failed to fetch users. Please try again later.'}
+          </CToastBody>
+          <CToastClose onClick={() => setToast(null)} />
+        </CToast>);
       }
     } finally {
       setLoading(false);
@@ -154,18 +181,28 @@ const UserRegistaration = () => {
         }
       );
       
-      setSuccess('User registered successfully!');
-      setError('');
+      setToast(<CToast color="success" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilCheckCircle} className="me-2" />
+          User registered successfully!
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
+      
       setModalVisible(false);
       resetForm();
       fetchUsers();
     } catch (err) {
       console.error('Failed to register user:', err);
-      if (err.response?.status === 403) {
-        setError('You do not have permission to register users');
-      } else {
-        setError(err.response?.data?.detail || 'Failed to register user. Please try again later.');
-      }
+      setToast(<CToast color="danger" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilWarning} className="me-2" />
+          {err.response?.status === 403 
+            ? 'You do not have permission to register users' 
+            : err.response?.data?.detail || 'Failed to register user. Please try again later.'}
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
     } finally {
       setLoading(false);
     }
@@ -205,18 +242,28 @@ const UserRegistaration = () => {
         }
       );
       
-      setSuccess('User updated successfully!');
-      setError('');
+      setToast(<CToast color="success" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilCheckCircle} className="me-2" />
+          User updated successfully!
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
+      
       setEditModalVisible(false);
       resetForm();
       fetchUsers();
     } catch (err) {
       console.error('Failed to update user:', err);
-      if (err.response?.status === 403) {
-        setError('You do not have permission to update this user');
-      } else {
-        setError(err.response?.data?.detail || 'Failed to update user. Please try again later.');
-      }
+      setToast(<CToast color="danger" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilWarning} className="me-2" />
+          {err.response?.status === 403 
+            ? 'You do not have permission to update this user' 
+            : err.response?.data?.detail || 'Failed to update user. Please try again later.'}
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
     } finally {
       setLoading(false);
     }
@@ -237,16 +284,26 @@ const UserRegistaration = () => {
         }
       );
       
-      setSuccess('User deleted successfully!');
-      setError('');
+      setToast(<CToast color="success" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilCheckCircle} className="me-2" />
+          User deleted successfully!
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
+      
       fetchUsers();
     } catch (err) {
       console.error('Failed to delete user:', err);
-      if (err.response?.status === 403) {
-        setError('You do not have permission to delete this user');
-      } else {
-        setError(err.response?.data?.detail || 'Failed to delete user. Please try again later.');
-      }
+      setToast(<CToast color="danger" visible={true}>
+        <CToastBody>
+          <CIcon icon={cilWarning} className="me-2" />
+          {err.response?.status === 403 
+            ? 'You do not have permission to delete this user' 
+            : err.response?.data?.detail || 'Failed to delete user. Please try again later.'}
+        </CToastBody>
+        <CToastClose onClick={() => setToast(null)} />
+      </CToast>);
     } finally {
       setLoading(false);
     }
@@ -284,75 +341,109 @@ const UserRegistaration = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>User Management</h2>
-        <CButton 
-          color="primary" 
-          onClick={() => setModalVisible(true)}
-          className="d-flex align-items-center"
-        >
-          <CIcon icon={cilPlus} className="me-2" />
-          Add User
-        </CButton>
-      </div>
+    <div className="user-management">
+      <CCard>
+        <CCardHeader className="bg-white">
+          <CRow className="align-items-center">
+            <CCol xs={12} md={6}>
+              <h4 className="mb-0">
+                <CIcon icon={cilUser} className="me-2 text-primary" />
+                User Management
+              </h4>
+              <small className="text-muted">Manage system users and permissions</small>
+            </CCol>
+            <CCol xs={12} md={6} className="text-md-end mt-3 mt-md-0">
+              <CButton 
+                color="danger" 
+                onClick={() => setModalVisible(true)}
+                shape="rounded-pill"
+              >
+                <CIcon icon={cilPlus} className="me-2" />
+                Add New User
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardHeader>
+        <CCardBody>
+          <CCallout color="info" className="mb-4">
+            <strong>Tip:</strong> Create user accounts with appropriate roles to manage system access and permissions.
+          </CCallout>
 
-      {error && <CAlert color="danger" className="mb-3">{error}</CAlert>}
-      {success && <CAlert color="success" className="mb-3">{success}</CAlert>}
-
-      {/* User Table */}
-      {loading && !users.length ? (
-        <div className="text-center py-5">
-          <CSpinner color="primary" />
-        </div>
-      ) : (
-        <CTable hover responsive>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell>Username</CTableHeaderCell>
-              <CTableHeaderCell>Email</CTableHeaderCell>
-              <CTableHeaderCell>Mobile Number</CTableHeaderCell>
-              <CTableHeaderCell>Role</CTableHeaderCell>
-              <CTableHeaderCell>Actions</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {users.map((user) => (
-              <CTableRow key={user.id}>
-                <CTableDataCell>{user.username}</CTableDataCell>
-                <CTableDataCell>{user.email}</CTableDataCell>
-                <CTableDataCell>{user.mobile_number}</CTableDataCell>
-                <CTableDataCell>
-                  <CBadge color={getRoleBadgeColor(user.role)}>
-                    {user.role}
-                  </CBadge>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <div className="d-flex gap-2">
-                    <CButton 
-                      color="outline-warning"
-                      size="sm" 
-                      onClick={() => handleEdit(user)}
-                      disabled={loading}
-                    >
-                      <CIcon icon={cilPencil} className="me-2"/>
-                    </CButton>
-                    <CButton 
-                      color="outline-danger" 
-                      size="sm" 
-                      onClick={() => handleDelete(user.id)}
-                      disabled={loading || user.role === 'superadmin'}
-                      title={user.role === 'superadmin' ? 'Cannot delete superadmin' : ''}
-                    >
-                      <CIcon icon={cilTrash} className="me-2"/>
-                    </CButton>
-                  </div>
-                </CTableDataCell>
-              </CTableRow>
-            ))}
-          </CTableBody>
-        </CTable>
-      )}
+          {/* User Table */}
+          {loading && !users.length ? (
+            <div className="text-center py-5">
+              <CSpinner color="primary" />
+              <p className="mt-2">Loading users...</p>
+            </div>
+          ) : users.length === 0 ? (
+            <div className="text-center py-5">
+              <CIcon icon={cilUser} size="xl" className="text-warning mb-2" />
+              <h5>No users found</h5>
+              <p className="text-muted">
+                Add your first user to get started
+              </p>
+              <CButton 
+                color="primary" 
+                onClick={() => setModalVisible(true)}
+                className="mt-2"
+              >
+                <CIcon icon={cilPlus} className="me-2" />
+                Add User
+              </CButton>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <CTable striped hover responsive className="table-borderless">
+                <CTableHead className="bg-light">
+                  <CTableRow>
+                    <CTableHeaderCell>Username</CTableHeaderCell>
+                    <CTableHeaderCell>Email</CTableHeaderCell>
+                    <CTableHeaderCell>Mobile Number</CTableHeaderCell>
+                    <CTableHeaderCell>Role</CTableHeaderCell>
+                    <CTableHeaderCell width={150} className="text-center">Actions</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {users.map((user) => (
+                    <CTableRow key={user.id} className="align-middle">
+                      <CTableDataCell>
+                        <strong>{user.username}</strong>
+                      </CTableDataCell>
+                      <CTableDataCell>{user.email}</CTableDataCell>
+                      <CTableDataCell>{user.mobile_number}</CTableDataCell>
+                      <CTableDataCell>
+                        <CBadge color={getRoleBadgeColor(user.role)} shape="rounded-pill">
+                          {user.role}
+                        </CBadge>
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        <CButton
+                          color="outline-warning"
+                          size="sm"
+                          onClick={() => handleEdit(user)}
+                          className="me-2"
+                          title="Edit"
+                        >
+                          <CIcon icon={cilPencil} />
+                        </CButton>
+                        <CButton
+                          color="outline-danger"
+                          size="sm"
+                          onClick={() => handleDelete(user.id)}
+                          title="Delete"
+                          disabled={user.role === 'superadmin'}
+                        >
+                          <CIcon icon={cilTrash} />
+                        </CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
+          )}
+        </CCardBody>
+      </CCard>
 
       {/* Registration Modal */}
       <CModal 
@@ -362,9 +453,13 @@ const UserRegistaration = () => {
           resetForm();
         }}
         backdrop="static"
+        size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Register New User</CModalTitle>
+          <CModalTitle>
+            <CIcon icon={cilPlus} className="me-2 text-primary" />
+            Register New User
+          </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CForm>
@@ -465,6 +560,7 @@ const UserRegistaration = () => {
             }}
             disabled={loading}
           >
+            <CIcon icon={cilX} className="me-2" />
             Cancel
           </CButton>
           <CButton 
@@ -472,7 +568,14 @@ const UserRegistaration = () => {
             onClick={handleRegister} 
             disabled={loading}
           >
-            {loading ? <CSpinner size="sm" /> : 'Register'}
+            {loading ? (
+              <CSpinner size="sm" />
+            ) : (
+              <>
+                <CIcon icon={cilCheckCircle} className="me-2" />
+                Register
+              </>
+            )}
           </CButton>
         </CModalFooter>
       </CModal>
@@ -485,9 +588,13 @@ const UserRegistaration = () => {
           resetForm();
         }}
         backdrop="static"
+        size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Edit User</CModalTitle>
+          <CModalTitle>
+            <CIcon icon={cilPencil} className="me-2 text-warning" />
+            Edit User
+          </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CForm>
@@ -590,6 +697,7 @@ const UserRegistaration = () => {
             }}
             disabled={loading}
           >
+            <CIcon icon={cilX} className="me-2" />
             Cancel
           </CButton>
           <CButton 
@@ -597,12 +705,23 @@ const UserRegistaration = () => {
             onClick={handleUpdate} 
             disabled={loading}
           >
-            {loading ? <CSpinner size="sm" /> : 'Save Changes'}
+            {loading ? (
+              <CSpinner size="sm" />
+            ) : (
+              <>
+                <CIcon icon={cilSave} className="me-2" />
+                Save Changes
+              </>
+            )}
           </CButton>
         </CModalFooter>
       </CModal>
+
+      <CToaster placement="top-end">
+        {toast}
+      </CToaster>
     </div>
   );
 };
 
-export default UserRegistaration;
+export default UserRegistration;

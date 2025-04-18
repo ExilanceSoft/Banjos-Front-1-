@@ -188,7 +188,7 @@ const FranchiseRequests = () => {
               Franchise Requests Management
             </h2>
             <div className="d-flex">
-              <CButton color="primary" onClick={fetchRequests} disabled={loading}>
+              <CButton color="danger" onClick={fetchRequests} disabled={loading}>
                 {loading ? <CSpinner size="sm" /> : "Refresh"}
               </CButton>
             </div>
@@ -299,84 +299,74 @@ const FranchiseRequests = () => {
                           {format(new Date(request.created_at), 'MMM dd, yyyy')}
                         </CTableDataCell>
                         <CTableDataCell className="text-end">
-                          <div className="d-flex justify-content-end gap-2">
-                            <CTooltip content="View details">
-                              <CButton
-                                color="info"
-                                variant="ghost"
-                                shape="rounded-pill"
-                                size="sm"
-                                onClick={() => viewRequestDetails(request)}
-                              >
-                                <CIcon icon={cilInfo} />
-                              </CButton>
-                            </CTooltip>
-                            
-                            {request.request_status === "pending" && (
-                              <>
-                                <CTooltip content="Approve">
-                                  <CButton
-                                    color="success"
-                                    variant="ghost"
-                                    shape="rounded-pill"
-                                    size="sm"
-                                    onClick={() => updateRequestStatus(request.id, "approved")}
-                                    disabled={loading}
-                                  >
-                                    <CIcon icon={cilCheckCircle} />
-                                  </CButton>
-                                </CTooltip>
-                                <CTooltip content="Reject">
-                                  <CButton
-                                    color="danger"
-                                    variant="ghost"
-                                    shape="rounded-pill"
-                                    size="sm"
-                                    onClick={() => updateRequestStatus(request.id, "rejected")}
-                                    disabled={loading}
-                                  >
-                                    <CIcon icon={cilXCircle} />
-                                  </CButton>
-                                </CTooltip>
-                              </>
-                            )}
-                            
-                            <CTooltip content="Delete">
-                              <CButton
-                                color="danger"
-                                variant="ghost"
-                                shape="rounded-pill"
-                                size="sm"
-                                onClick={() => setDeleteConfirm(request.id)}
-                                disabled={loading}
-                              >
-                                <CIcon icon={cilTrash} />
-                              </CButton>
-                            </CTooltip>
-                          </div>
-                          
-                          {deleteConfirm === request.id && (
-                            <div className="mt-2 p-2 bg-light rounded">
-                              <p className="mb-2 small">Are you sure?</p>
-                              <div className="d-flex gap-2">
-                                <CButton
-                                  size="sm"
-                                  color="danger"
-                                  onClick={() => handleDeleteRequest(request.id)}
-                                >
-                                  Yes, delete
-                                </CButton>
-                                <CButton
-                                  size="sm"
-                                  color="secondary"
-                                  onClick={() => setDeleteConfirm(null)}
-                                >
-                                  Cancel
-                                </CButton>
-                              </div>
-                            </div>
-                          )}
-                        </CTableDataCell>
+  {/* View Button (similar to CategoriesManagement's info button) */}
+  <CButton
+    color="outline-info"
+    size="sm"
+    onClick={() => viewRequestDetails(request)}
+    className="me-6"
+    title="View Details"
+  >
+    <CIcon icon={cilInfo} />
+  </CButton>
+
+  {/* Edit Button (matches CategoriesManagement) */}
+  {request.request_status === "pending" && (
+    <>
+      <CButton
+        color="outline-success"
+        size="sm"
+        onClick={() => updateRequestStatus(request.id, "approved")}
+        className="me-2"
+        title="Approve"
+      >
+        <CIcon icon={cilCheckCircle} />
+      </CButton>
+      <CButton
+        color="outline-danger"
+        size="sm"
+        onClick={() => updateRequestStatus(request.id, "rejected")}
+        className="me-2"
+        title="Reject"
+      >
+        <CIcon icon={cilXCircle} />
+      </CButton>
+    </>
+  )}
+
+  {/* Delete Button (matches CategoriesManagement) */}
+  <CButton
+    color="outline-danger"
+    size="sm"
+    onClick={() => setDeleteConfirm(request.id)}
+    title="Delete"
+  >
+    <CIcon icon={cilTrash} />
+  </CButton>
+
+  {/* Delete Confirmation (keep your existing logic) */}
+  {deleteConfirm === request.id && (
+    <div className="mt-2 p-2 bg-light rounded">
+      <p className="mb-2 small">Are you sure?</p>
+      <div className="d-flex gap-2">
+        <CButton
+          size="sm"
+          color="danger"
+          onClick={() => handleDeleteRequest(request.id)}
+        >
+          Yes, delete
+        </CButton>
+        <CButton
+          size="sm"
+          color="secondary"
+          onClick={() => setDeleteConfirm(null)}
+        >
+          Cancel
+        </CButton>
+      </div>
+    </div>
+  )}
+</CTableDataCell>
                       </CTableRow>
                     ))}
                   </CTableBody>

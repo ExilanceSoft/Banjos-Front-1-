@@ -17,7 +17,7 @@ const AppFooter = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          exilance
+          banjos
         </a>
       </div>
     </CFooter>

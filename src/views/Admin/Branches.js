@@ -269,50 +269,48 @@ const Branches = () => {
     <div className="branches-management-container">
     
         <CCard>
-          <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap">
-            <div className="mb-2 mb-md-0">
-              <h2 className="mb-0">
-                <CIcon icon={cilLocationPin} className="me-2 text-primary" />
-                Branches Management
-              </h2>
-            </div>
-            
-               <CCol xs={12} lg={6} className="mt-3 mt-lg-0">
-                          <div className="d-flex justify-content-lg-end">
-                            <CBadge color="info" className="me-2">
-                              Total Branches:  {totalBranches}
-                            </CBadge>
-                            
-                          </div>
-                        </CCol>
-            <div className="d-flex flex-wrap gap-2">
-             
-              <CInputGroup className="me-2" style={{ minWidth: '250px' }}>
-                <CInputGroupText>
-                  <CIcon icon={cilSearch} />
-                </CInputGroupText>
-                <CFormInput
-                  placeholder="Search branches..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </CInputGroup>
-              
-               <CCol xs={12} md={6} className="text-md-end mt-3 mt-md-0">
-                            <CButton 
-                              color="primary" 
-                              onClick={() => openModal()}
-                              shape="rounded-pill"
-                            >
-                              <CIcon icon={cilPlus} className="me-2" />
-                              Add New Branch
-                            </CButton>
-                          </CCol>
-                          
-                        
-            </div>
-          </CCardHeader>
+        <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap">
+  <div className="mb-2 mb-md-0">
+    <h4 className="mb-0">
+      <CIcon icon={cilLocationPin} className="me-2 text-primary" />
+      Branches Management
+    </h4>
+    <small className="text-muted">Manage your restaurant branches</small>
+  </div>
+  
+  <div className="d-flex flex-wrap gap-2 align-items-center">
+   
+    
+    <CButton 
+      color="danger" 
+      onClick={() => openModal()}
+      shape="rounded-pill"
+    >
+      <CIcon icon={cilPlus} className="me-2" />
+      Add New Branch
+    </CButton>
+  </div>
+ 
+    
+    
+    
+ 
+</CCardHeader>
           <CCardBody>
+          <div className="d-flex flex-wrap gap-2 align-items-center mt-3">
+    <CInputGroup style={{ minWidth: '250px' }}>
+      <CInputGroupText>
+        <CIcon icon={cilSearch} />
+      </CInputGroupText>
+      <CFormInput
+        placeholder="Search branches..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </CInputGroup>
+   
+    </div>
+   
             {/* Status Filter Tabs */}
             <CNav variant="tabs" className="mb-4">
               <CNavItem>
@@ -435,43 +433,34 @@ const Branches = () => {
                         <CTableDataCell className="text-center">
                           {getStatusBadge(branch.branch_status)}
                         </CTableDataCell>
-                        <CTableDataCell className="text-end">
-                          <div className="d-flex justify-content-end gap-2">
-                            <CTooltip content="View details">
-                              <CButton
-                                color="info"
-                                variant="ghost"
-                                shape="rounded-pill"
-                                size="sm"
-                                onClick={() => openViewModal(branch)}
-                              >
-                                <CIcon icon={cilInfo} />
-                              </CButton>
-                            </CTooltip>
-                            <CTooltip content="Edit branch">
-                              <CButton
-                                color="warning"
-                                variant="ghost"
-                                shape="rounded-pill"
-                                size="sm"
-                                onClick={() => openModal(branch)}
-                              >
-                                <CIcon icon={cilPencil} />
-                              </CButton>
-                            </CTooltip>
-                            <CTooltip content="Delete branch">
-                              <CButton
-                                color="danger"
-                                variant="ghost"
-                                shape="rounded-pill"
-                                size="sm"
-                                onClick={() => confirmDelete(branch)}
-                              >
-                                <CIcon icon={cilTrash} />
-                              </CButton>
-                            </CTooltip>
-                          </div>
-                        </CTableDataCell>
+                        <CTableDataCell className="text-center">
+  <CButton
+    color="outline-info"
+    size="sm"
+    onClick={() => openViewModal(branch)}
+    className="me-2"
+    title="View Details"
+  >
+    <CIcon icon={cilInfo} />
+  </CButton>
+  <CButton
+    color="outline-warning"
+    size="sm"
+    onClick={() => openModal(branch)}
+    className="me-2"
+    title="Edit"
+  >
+    <CIcon icon={cilPencil} />
+  </CButton>
+  <CButton
+    color="outline-danger"
+    size="sm"
+    onClick={() => confirmDelete(branch)}
+    title="Delete"
+  >
+    <CIcon icon={cilTrash} />
+  </CButton>
+</CTableDataCell>
                       </CTableRow>
                     ))}
                   </CTableBody>
@@ -997,40 +986,167 @@ const Branches = () => {
         </CModal>
      
       
-      <style>{`
-        .branches-management-container {
-          background-color: #f8f9fa;
-        }
-        .summary-card {
-          border-top: 3px solid #321fdb;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        .branch-image {
-          object-fit: cover;
-          border-radius: 8px;
-        }
-        .branch-image-placeholder {
-          width: 60px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #f0f0f0;
-          border-radius: 8px;
-          color: #6c757d;
-        }
-        .branch-row:hover {
-          background-color: rgba(50, 31, 219, 0.05) !important;
-        }
-        .modal-header {
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-        .modal-footer {
-          border-top: none;
-          padding-top: 0;
-        }
-      `}</style>
+        <style>{`
+  .branches-management-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+  }
+  
+  .card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .table {
+    margin-bottom: 0;
+  }
+  
+  .table th {
+    border-top: none;
+    font-weight: 600;
+    color: #4f5d73;
+    background-color: #f8f9fa;
+  }
+  
+  .table td {
+    vertical-align: middle;
+  }
+  
+  .branch-image {
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e1e5eb;
+  }
+  
+  .branch-image-placeholder {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    color: #6c757d;
+  }
+  
+  .branch-row:hover {
+    background-color: rgba(13, 110, 253, 0.05) !important;
+  }
+  
+  .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .modal-footer {
+    border-top: none;
+    padding-top: 0;
+  }
+  
+  .input-group {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  }
+  
+  .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+  }
+  
+  .form-control {
+    border-left: none;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+  }
+  
+  .nav-tabs .nav-link {
+    border: none;
+    color: #4f5d73;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-bottom: 2px solid #0d6efd;
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+  }
+  
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+  
+  .btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+  }
+  
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .text-muted {
+    color: #6c757d !important;
+  }
+  
+  .rounded-pill {
+    border-radius: 50rem !important;
+  }
+  
+  .callout {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #0d6efd;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .callout-info {
+    border-left-color: #0dcaf0;
+  }
+  
+  @media (max-width: 768px) {
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .search-container {
+      margin-top: 1rem;
+      width: 100%;
+    }
+  }
+`}</style>
     </div>
   );
 };

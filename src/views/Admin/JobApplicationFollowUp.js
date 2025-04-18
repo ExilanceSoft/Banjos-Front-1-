@@ -323,8 +323,9 @@ const JobApplicationFollowUp = () => {
     <CCard className="mb-4">
       <CCardHeader className="bg-white">
         <div className="d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">Job Applications</h3>
-          <CButton color="primary" onClick={fetchApplications} className="d-flex align-items-center">
+         <div> <h4 className="mb-0">Job Applications</h4><br/>
+          <p className="text-muted mb-0 mt-0">Manage all job Applications </p></div>
+          <CButton color="danger" onClick={fetchApplications} className="d-flex align-items-center">
             <CIcon icon={cilReload} className="me-2" />
             Refresh
           </CButton>

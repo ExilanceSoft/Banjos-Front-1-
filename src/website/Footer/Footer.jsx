@@ -41,7 +41,7 @@ const Footer = () => {
     },
     icon: {
       fontSize: '20px',
-      color: '#e4141c',
+      color: '#ffca2c',
       marginRight: '15px',
       marginTop: '4px',
     },

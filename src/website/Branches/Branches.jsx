@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import { motion, AnimatePresence } from 'framer-motion';
+import frncies from '../../assets/img/francies.jpg';
+import './Branches.css'; // Create this CSS file for additional styles
 
 // Make sure to set the app element for accessibility
 Modal.setAppElement('#root');
@@ -77,132 +80,231 @@ const Branches = () => {
     ? branches 
     : branches.filter(branch => branch.city === activeFilter);
 
-    if (loading) {
-      return (
-        <section id="menu" className="menu section abc">
-          <div className="container text-center py-5">
-            <div className="loading-overlay">
-              <img 
-                src="/pizza.gif"  // Make sure pizza.gif is in public folder
-                alt="Loading menu..." 
-                className="loading-gif"
-              />
-              <div className="loading-text">Preparing Your Menu...</div>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-  if (error) {
+  if (loading) {
     return (
-      <section id="branches" style={styles.errorContainer}>
-        <p style={styles.errorText}>Error: {error}</p>
+      <section id="menu" className="menu section">
+        <div className="container text-center py-5">
+          <motion.div 
+            className="loading-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <img 
+              src="/pizza.gif"
+              alt="Loading menu..." 
+              className="loading-gif"
+            />
+            <motion.div 
+              className="loading-text"
+              animate={{
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+              }}
+            >
+              Preparing Your Menu...
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
     );
   }
 
+  if (error) {
+    return (
+      <motion.section 
+        id="branches" 
+        style={styles.errorContainer}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <p style={styles.errorText}>Error: {error}</p>
+      </motion.section>
+    );
+  }
+
   return (
-    <section id="branches" className="branches abc" style={styles.portfolio}>
+    <section id="branches" className="branches" style={styles.portfolio}>
+      {/* Banner Section */}
+      <motion.div 
+        style={styles.bannerContainer}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <img 
+          src={frncies}
+          alt="Our Branches" 
+          style={styles.bannerImage}
+        />
+        <div style={styles.bannerOverlay}>
+          <motion.h1 
+            style={styles.bannerTitle}
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            Our Branches
+          </motion.h1>
+          <motion.p 
+            style={styles.bannerText}
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            Discover our delicious food at a location near you
+          </motion.p>
+        </div>
+      </motion.div>
+
       {/* Section Title */}
-      <div className="section-title" style={styles.sectionTitle}>
-        <h2 style={styles.sectionTitleH2}>Our Branches</h2>
+      <motion.div 
+        className="section-title" 
+        style={styles.sectionTitle}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.8 }}
+      >
+        <h2 style={styles.sectionTitleH2}>Find Your Nearest Branch</h2>
         <div className="title-shape" style={styles.titleShape}>
           <svg viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M 0,10 C 40,0 60,20 100,10 C 140,0 160,20 200,10" fill="none" stroke="#e4141c" strokeWidth="2"></path>
           </svg>
         </div>
         <p style={styles.sectionTitleP}>Find your nearest branch and enjoy our signature dishes anytime.</p>
-      </div>
+      </motion.div>
 
       <div className="container" style={styles.container}>
         {/* Filter Buttons */}
-        <div className="portfolio-filters-container" style={styles.filtersContainer}>
+        <motion.div 
+          className="portfolio-filters-container" 
+          style={styles.filtersContainer}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
           <ul className="portfolio-filters" style={styles.filtersList}>
-            <li 
+            <motion.li 
               style={activeFilter === 'all' ? {...styles.filterItem, ...styles.filterItemActive} : styles.filterItem}
               onClick={() => handleFilterClick('all')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               All Branches
-            </li>
+            </motion.li>
             {[...new Set(branches.map(branch => branch.city))].map(city => (
-              <li 
+              <motion.li 
                 key={city}
                 style={activeFilter === city ? {...styles.filterItem, ...styles.filterItemActive} : styles.filterItem}
                 onClick={() => handleFilterClick(city)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {city}
-              </li>
+              </motion.li>
             ))}
           </ul>
-        </div>
+        </motion.div>
 
         {/* Branch Cards */}
         <div className="portfolio-grid" style={styles.portfolioGrid}>
-          {filteredBranches.map(branch => (
-            <div key={branch.id} className="portfolio-item" style={styles.portfolioItem}>
-              <div className="portfolio-card" style={styles.portfolioCard}>
-                <div className="portfolio-image" style={styles.portfolioImage}>
-                  <img 
-                    src={`http://64.227.163.17:8000${branch.image_url}`} 
-                    className="img-fluid" 
-                    alt={branch.name} 
-                    loading="lazy" 
-                    style={styles.portfolioImg}
-                  />
-                  <div className="portfolio-overlay" style={styles.portfolioOverlay}>
-                    <div className="portfolio-actions" style={styles.portfolioActions}>
-                      <button 
-                        className="preview-link"
-                        style={styles.portfolioActionBtn}
-                        onClick={() => openLightbox(branch.image_url)}
-                      >
-                        <i className="bi bi-eye" style={styles.portfolioActionIcon}></i>
-                      </button>
+          <AnimatePresence>
+            {filteredBranches.map((branch, index) => (
+              <motion.div 
+                key={branch.id} 
+                className="portfolio-item" 
+                style={styles.portfolioItem}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                exit={{ opacity: 0 }}
+                layout
+              >
+                <div className="portfolio-card" style={styles.portfolioCard}>
+                  <div className="portfolio-image" style={styles.portfolioImage}>
+                    <img 
+                      src={`http://64.227.163.17:8000${branch.image_url}`} 
+                      className="img-fluid" 
+                      alt={branch.name} 
+                      loading="lazy" 
+                      style={styles.portfolioImg}
+                    />
+                    <div className="portfolio-overlay" style={styles.portfolioOverlay}>
+                      <div className="portfolio-actions" style={styles.portfolioActions}>
+                        <motion.button 
+                          className="preview-link"
+                          style={styles.portfolioActionBtn}
+                          onClick={() => openLightbox(branch.image_url)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <i className="bi bi-eye" style={styles.portfolioActionIcon}></i>
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="portfolio-content" style={styles.portfolioContent}>
-                  <span className="category" style={styles.portfolioCategory}>
-                    {branch.city}, {branch.state}
-                  </span>
-                  <h3 style={styles.portfolioTitle}>{branch.name}</h3>
-                  <div style={styles.branchDetails}>
-                    <p style={styles.portfolioDescription}>
-                      <i className="bi bi-geo-alt" style={styles.icon}></i> {branch.address}
-                    </p>
-                    <p style={styles.portfolioDescription}>
-                      <i className="bi bi-clock" style={styles.icon}></i> {branch.opening_hours}
-                    </p>
-                    <p style={styles.portfolioDescription}>
-                      <i className="bi bi-telephone" style={styles.icon}></i> {branch.phone_number}
-                    </p>
-                    <div style={styles.amenities}>
-                      {branch.wifi_availability && (
-                        <span style={styles.amenity} title="WiFi Available">
-                          <i className="bi bi-wifi" style={styles.icon}></i>
-                        </span>
-                      )}
-                      {branch.parking_availability && (
-                        <span style={styles.amenity} title="Parking Available">
-                          <i className="bi bi-p-circle" style={styles.icon}></i>
-                        </span>
-                      )}
-                      <span style={styles.amenity} title={`Seating Capacity: ${branch.seating_capacity}`}>
-                        <i className="bi bi-people" style={styles.icon}></i> {branch.seating_capacity}
-                      </span>
+                  <div className="portfolio-content" style={styles.portfolioContent}>
+                    <span className="category" style={styles.portfolioCategory}>
+                      {branch.city}, {branch.state}
+                    </span>
+                    <h3 style={styles.portfolioTitle}>{branch.name}</h3>
+                    <div style={styles.branchDetails}>
+                      <p style={styles.portfolioDescription}>
+                        <i className="bi bi-geo-alt" style={styles.icon}></i> {branch.address}
+                      </p>
+                      <p style={styles.portfolioDescription}>
+                        <i className="bi bi-clock" style={styles.icon}></i> {branch.opening_hours}
+                      </p>
+                      <p style={styles.portfolioDescription}>
+                        <i className="bi bi-telephone" style={styles.icon}></i> {branch.phone_number}
+                      </p>
+                      <div style={styles.amenities}>
+                        {branch.wifi_availability && (
+                          <motion.span 
+                            style={styles.amenity} 
+                            title="WiFi Available"
+                            whileHover={{ scale: 1.2 }}
+                          >
+                            <i className="bi bi-wifi" style={styles.icon}></i>
+                          </motion.span>
+                        )}
+                        {branch.parking_availability && (
+                          <motion.span 
+                            style={styles.amenity} 
+                            title="Parking Available"
+                            whileHover={{ scale: 1.2 }}
+                          >
+                            <i className="bi bi-p-circle" style={styles.icon}></i>
+                          </motion.span>
+                        )}
+                        <motion.span 
+                          style={styles.amenity} 
+                          title={`Seating Capacity: ${branch.seating_capacity}`}
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <i className="bi bi-people" style={styles.icon}></i> {branch.seating_capacity}
+                        </motion.span>
+                      </div>
                     </div>
+                    <motion.button 
+                      onClick={() => openOrderModal(branch)}
+                      style={styles.orderNowButton}
+                      whileHover={{ 
+                        scale: 1.03,
+                        boxShadow: '0 5px 15px rgba(255, 193, 7, 0.4)'
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Order Now
+                    </motion.button>
                   </div>
-                  <button 
-                    onClick={() => openOrderModal(branch)}
-                    style={styles.orderNowButton}
-                  >
-                    Order Now
-                  </button>
                 </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -213,82 +315,147 @@ const Branches = () => {
         style={customModalStyles}
         contentLabel="Order Options"
       >
-        <h2 style={styles.modalTitle}>Order from {currentBranch?.name}</h2>
-        <p style={styles.modalSubtitle}>{currentBranch?.address}</p>
-        <div style={styles.modalButtonsContainer}>
-          {orderLinks
-            .filter(link => link.branch_id === currentBranch?.id)
-            .map(link => (
-              <a 
-                key={link.id}
-                href={link.url}
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={styles.foodAppButton}
-                title={`Order on ${link.platform}`}
-              >
-                <img 
-                  src={`http://64.227.163.17:8000${link.logo}`}
-                  alt={link.platform} 
-                  style={styles.foodAppLogo}
-                />
-              </a>
-            ))}
-        </div>
-        <button onClick={closeModal} style={styles.closeModalButton}>
-          Close
-        </button>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <h2 style={styles.modalTitle}>Order from {currentBranch?.name}</h2>
+          <p style={styles.modalSubtitle}>{currentBranch?.address}</p>
+          <div style={styles.modalButtonsContainer}>
+            {orderLinks
+              .filter(link => link.branch_id === currentBranch?.id)
+              .map(link => (
+                <motion.a 
+                  key={link.id}
+                  href={link.url}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={styles.foodAppButton}
+                  title={`Order on ${link.platform}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img 
+                    src={`http://64.227.163.17:8000${link.logo}`}
+                    alt={link.platform} 
+                    style={styles.foodAppLogo}
+                  />
+                </motion.a>
+              ))}
+          </div>
+          <motion.button 
+            onClick={closeModal} 
+            style={styles.closeModalButton}
+            whileHover={{ backgroundColor: '#e0e0e0' }}
+          >
+            Close
+          </motion.button>
+        </motion.div>
       </Modal>
 
       {/* Lightbox */}
-      {lightboxImage && (
-        <div className="lightbox-overlay" style={styles.lightboxOverlay} onClick={closeLightbox}>
-          <div className="lightbox-content" style={styles.lightboxContent} onClick={e => e.stopPropagation()}>
-            <button className="lightbox-close" style={styles.lightboxClose} onClick={closeLightbox}>
-              &times;
-            </button>
-            <img src={lightboxImage} alt="Branch" style={styles.lightboxImg} />
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div 
+            className="lightbox-overlay" 
+            style={styles.lightboxOverlay} 
+            onClick={closeLightbox}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="lightbox-content" 
+              style={styles.lightboxContent} 
+              onClick={e => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            >
+              <button className="lightbox-close" style={styles.lightboxClose} onClick={closeLightbox}>
+                &times;
+              </button>
+              <img src={lightboxImage} alt="Branch" style={styles.lightboxImg} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
-// Enhanced styles
+
+// Enhanced styles with modern design elements
 const styles = {
   portfolio: {
     color: '#333',
     backgroundColor: '#f9f9f9',
-    padding: '60px 0',
+    padding: '0 0 80px 0',
     scrollMarginTop: '90px',
     overflow: 'hidden',
   },
-  loadingContainer: {
+  // Banner Styles
+  bannerContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '60vh',
+    minHeight: '400px',
+    maxHeight: '600px',
+    overflow: 'hidden',
+    marginBottom: '60px',
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+  },
+  bannerOverlay: {
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%)',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: '300px',
+    alignItems: 'center',
+    color: '#fff',
+    textAlign: 'center',
+    padding: '20px',
   },
-  spinner: {
-    border: '5px solid #f3f3f3',
-    borderTop: '5px solid #e4141c',
-    borderRadius: '50%',
-    width: '50px',
-    height: '50px',
-    animation: 'spin 1s linear infinite',
+  bannerTitle: {
+    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+    fontWeight: '800',
     marginBottom: '20px',
+    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)',
+    color: '#ffc107',
+    letterSpacing: '1px',
+    fontFamily: '"Playfair Display", serif',
+  },
+  bannerText: {
+    fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+    fontWeight: '400',
+    textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)',
+    maxWidth: '800px',
+    lineHeight: '1.6',
+    fontFamily: '"Poppins", sans-serif',
   },
   errorContainer: {
     padding: '40px',
     textAlign: 'center',
-    backgroundColor: '#ffe6e6',
+    backgroundColor: '#fff',
     margin: '20px',
-    borderRadius: '8px',
+    borderRadius: '12px',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+    borderLeft: '5px solid #e4141c',
   },
   errorText: {
     color: '#d32f2f',
     fontSize: '18px',
+    fontWeight: '500',
   },
   sectionTitle: {
     textAlign: 'center',
@@ -299,28 +466,29 @@ const styles = {
     padding: '0 15px',
   },
   sectionTitleH2: {
-    fontSize: '42px',
+    fontSize: 'clamp(2rem, 3vw, 2.5rem)',
     fontWeight: '700',
-    marginBottom: '10px',
-    background: 'linear-gradient(120deg, #333, #e4141c)',
+    marginBottom: '15px',
+    background: 'linear-gradient(135deg, #333 0%, #ffc107 100%)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
     position: 'relative',
+    fontFamily: '"Playfair Display", serif',
   },
   titleShape: {
     width: '200px',
     height: '20px',
-    margin: '0 auto',
+    margin: '0 auto 20px',
     color: '#e4141c',
-    opacity: '0.5',
   },
   sectionTitleP: {
     margin: '15px auto 0',
-    fontSize: '16px',
+    fontSize: 'clamp(0.9rem, 1.2vw, 1.1rem)',
     maxWidth: '700px',
-    color: 'rgba(51, 51, 51, 0.75)',
+    color: 'rgba(51, 51, 51, 0.8)',
     lineHeight: '1.8',
+    fontFamily: '"Poppins", sans-serif',
   },
   container: {
     maxWidth: '1200px',
@@ -341,41 +509,45 @@ const styles = {
   },
   filterItem: {
     fontSize: '15px',
-    fontWeight: '500',
-    padding: '8px 20px',
+    fontWeight: '600',
+    padding: '10px 25px',
     cursor: 'pointer',
     borderRadius: '30px',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: '#fff',
     color: '#333',
     transition: 'all 0.3s ease-in-out',
     border: 'none',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    fontFamily: '"Poppins", sans-serif',
   },
   filterItemActive: {
-    backgroundColor: '#e4141c',
+    backgroundColor: '#ffc107',
     color: '#fff',
+    boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
   },
   portfolioGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '25px',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: '30px',
   },
   portfolioItem: {
     transition: 'all 0.3s ease',
   },
   portfolioCard: {
     backgroundColor: '#fff',
-    borderRadius: '12px',
+    borderRadius: '16px',
     overflow: 'hidden',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
     transition: 'all 0.3s ease-in-out',
-    height: 'auto',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    border: '1px solid rgba(0,0,0,0.05)',
   },
   portfolioImage: {
     position: 'relative',
     overflow: 'hidden',
-    height: '200px',
+    height: '220px',
     width: '100%',
   },
   portfolioImg: {
@@ -405,19 +577,19 @@ const styles = {
     gap: '15px',
   },
   portfolioActionBtn: {
-    width: '45px',
-    height: '45px',
+    width: '50px',
+    height: '50px',
     backgroundColor: '#fff',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#e4141c',
-    fontSize: '20px',
+    color: '#ffc107',
+    fontSize: '22px',
     transition: 'all 0.3s ease',
     border: 'none',
     cursor: 'pointer',
-    textDecoration: 'none',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
   },
   portfolioActionIcon: {
     display: 'flex',
@@ -427,119 +599,129 @@ const styles = {
   portfolioContent: {
     padding: '25px',
     flex: '1',
+    display: 'flex',
+    flexDirection: 'column',
   },
   portfolioCategory: {
     fontSize: '14px',
-    color: '#e4141c',
+    color: '#ffc107',
     textTransform: 'uppercase',
     letterSpacing: '1px',
-    fontWeight: '500',
+    fontWeight: '600',
     display: 'block',
     marginBottom: '10px',
+    fontFamily: '"Poppins", sans-serif',
   },
   portfolioTitle: {
-    fontSize: '20px',
+    fontSize: '22px',
     margin: '0 0 15px',
-    fontWeight: '600',
-    transition: 'color 0.3s ease',
+    fontWeight: '700',
     color: '#333',
+    fontFamily: '"Playfair Display", serif',
   },
   branchDetails: {
     marginBottom: '15px',
+    flex: '1',
   },
   portfolioDescription: {
-    fontSize: '14px',
-    color: 'rgba(51, 51, 51, 0.7)',
-    margin: '0 0 10px',
+    fontSize: '15px',
+    color: 'rgba(51, 51, 51, 0.8)',
+    margin: '0 0 12px',
     lineHeight: '1.6',
     display: 'flex',
     alignItems: 'flex-start',
+    fontFamily: '"Poppins", sans-serif',
   },
   icon: {
-    marginRight: '8px',
-    color: '#e4141c',
-    fontSize: '16px',
+    marginRight: '10px',
+    color: '#ffc107',
+    fontSize: '18px',
     minWidth: '20px',
   },
   amenities: {
     display: 'flex',
     gap: '15px',
-    marginTop: '10px',
+    marginTop: '15px',
+    flexWrap: 'wrap',
   },
   amenity: {
     display: 'flex',
     alignItems: 'center',
     fontSize: '14px',
-    color: 'rgba(51, 51, 51, 0.7)',
+    color: 'rgba(51, 51, 51, 0.8)',
+    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+    padding: '5px 10px',
+    borderRadius: '20px',
+    fontFamily: '"Poppins", sans-serif',
   },
   orderNowButton: {
-    backgroundColor: '#e4141c',
-    color: 'white',
+    backgroundColor: '#ffc107',
+    color: '#fff',
     border: 'none',
-    padding: '12px 20px',
-    borderRadius: '5px',
+    padding: '14px 20px',
+    borderRadius: '8px',
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: '600',
-    marginTop: '15px',
+    marginTop: '20px',
     transition: 'all 0.3s ease',
     width: '100%',
-    '&:hover': {
-      backgroundColor: '#c01118'
-    }
+    boxShadow: '0 4px 10px rgba(255, 193, 7, 0.3)',
+    fontFamily: '"Poppins", sans-serif',
+    letterSpacing: '0.5px',
   },
   modalTitle: {
     color: '#333',
     textAlign: 'center',
     marginBottom: '10px',
-    fontSize: '22px',
-    fontWeight: '600'
+    fontSize: '24px',
+    fontWeight: '700',
+    fontFamily: '"Playfair Display", serif',
   },
   modalSubtitle: {
     color: '#666',
     textAlign: 'center',
     marginBottom: '30px',
-    fontSize: '16px'
+    fontSize: '16px',
+    fontFamily: '"Poppins", sans-serif',
   },
   modalButtonsContainer: {
     display: 'flex',
     justifyContent: 'center',
-    gap: '30px',
-    marginBottom: '30px'
+    gap: '25px',
+    marginBottom: '30px',
+    flexWrap: 'wrap',
   },
   foodAppButton: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '80px',
-    height: '80px',
-    backgroundColor: '#fc8019',
-    borderRadius: '50%',
+    width: '90px',
+    height: '90px',
+    backgroundColor: '#fff',
+    borderRadius: '20px',
     transition: 'all 0.3s ease',
-    '&:hover': {
-      transform: 'scale(1.1)'
-    }
+    boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+    padding: '15px',
   },
   foodAppLogo: {
-    width: '50px',
-    height: '50px',
-    objectFit: 'contain'
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
   },
   closeModalButton: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
     color: '#333',
-    border: 'none',
+    border: '2px solid #ffc107',
     padding: '12px 20px',
-    borderRadius: '5px',
+    borderRadius: '8px',
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: '600',
     marginTop: '20px',
     width: '100%',
     transition: 'all 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#e0e0e0'
-    }
+    fontFamily: '"Poppins", sans-serif',
   },
   lightboxOverlay: {
     position: 'fixed',
@@ -547,11 +729,12 @@ const styles = {
     left: '0',
     right: '0',
     bottom: '0',
-    background: 'rgba(0, 0, 0, 0.9)',
+    background: 'rgba(0, 0, 0, 0.95)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: '9999',
+    padding: '20px',
   },
   lightboxContent: {
     position: 'relative',
@@ -562,11 +745,12 @@ const styles = {
     maxWidth: '100%',
     maxHeight: '90vh',
     display: 'block',
-    borderRadius: '8px',
+    borderRadius: '12px',
+    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
   },
   lightboxClose: {
     position: 'absolute',
-    top: '-40px',
+    top: '-50px',
     right: '0',
     color: 'white',
     background: 'rgba(0, 0, 0, 0.5)',
@@ -579,6 +763,10 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#e4141c',
+    }
   }
 };
 
@@ -590,28 +778,20 @@ const customModalStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    maxWidth: '400px',
+    maxWidth: '500px',
     width: '90%',
-    borderRadius: '12px',
+    borderRadius: '16px',
     padding: '30px',
-    boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
+    boxShadow: '0 15px 50px rgba(0,0,0,0.3)',
     border: 'none',
-    textAlign: 'center'
+    textAlign: 'center',
+    backgroundColor: '#f9f9f9',
   },
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    zIndex: 1000
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    zIndex: 1000,
+    backdropFilter: 'blur(5px)',
   }
 };
-
-// Add this to your global CSS
-const globalStyles = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-    
-`;
-
 
 export default Branches;

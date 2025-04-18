@@ -1,8 +1,10 @@
 import React, { Suspense } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CSpinner } from '@coreui/react-pro';
 import './scss/style.scss';
 import './scss/examples.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Layouts
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
@@ -28,11 +30,22 @@ const ImagesPage = React.lazy(() => import('./views/Admin/ImagesPage'));
 const TestimonialsPage = React.lazy(() => import('./views/Admin/TestimonialsPage'));
 const AdminDashboard = React.lazy(() => import('./views/Admin/AdminDashboard'));
 const CategoriesManagement = React.lazy(() => import('./views/Admin/CategoriesManagement'));
- const UserRegistaration = React.lazy(() => import('./views/Admin/UserRegistaration'));
+const UserRegistaration = React.lazy(() => import('./views/Admin/UserRegistaration'));
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('access_token');
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+// Add PropTypes validation
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 const App = () => {
   return (
-    <Router> {/* Changed from HashRouter to BrowserRouter */}
+    <Router>
       <Suspense fallback={<div className="pt-3 text-center"><CSpinner color="primary" variant="grow" /></div>}>
         <Routes>
           {/* Public Routes */}
@@ -43,8 +56,8 @@ const App = () => {
           <Route path="/500" element={<Page500 />} />
           <Route path="/" element={<Navigate to="/WebIndex" />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin/*" element={<DefaultLayout />}>
+          {/* Protected Admin Routes */}
+          <Route path="/admin" element={<ProtectedRoute><DefaultLayout /></ProtectedRoute>}>
             <Route path="AdminDashboard" element={<AdminDashboard />} />
             <Route path="MenuManagement" element={<MenuManagement />} />
             <Route path="VisitorTestimonialsPage" element={<VisitorTestimonialsPage />} />
@@ -59,7 +72,6 @@ const App = () => {
             <Route path="CategoriesManagement" element={<CategoriesManagement />} />
             <Route path="TestimonialsPage" element={<TestimonialsPage />} />
             <Route path="UserRegistaration" element={<UserRegistaration />} />
-
           </Route>
 
           {/* Catch-All Route for 404 */}
